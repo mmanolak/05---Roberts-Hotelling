@@ -25,7 +25,7 @@ plot( t.s, p, type = "l", lwd=3,
       xlim = c(0,50),
       main = "How r affects time path of price"
 )
-text(t.s[30], p[30]+1, "r=0.05")
+text(t.s[30], p[30]+1, "r=0.05") 
 
 # change r to 0.10
 Tf <- uniroot(stock.time, c(0, 1000), r=0.10)$root
