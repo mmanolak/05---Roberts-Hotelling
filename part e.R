@@ -1,5 +1,7 @@
+# PART 1: DATA GENERATION WITH NON-LINEAR DEMAND
+
 # Step A: Define Model Parameters
-# Using the user-defined parameters for a clear view of the demand curve
+# Using the user-provided parameters for a clear view of the demand curve
 r_base <- 0.05; R0_base <- 1000
 r_shock <- 0.10; R0_shock <- 500
 pT <- 3; A <- 120; epsilon <- 0.5
@@ -41,7 +43,8 @@ stock_R_shock <- R0_shock - sapply(time_R_shock, function(t) {
 })
 
 
-# The Beginning of the End (Final Plotting Functions with All Projections)
+# PART 2: THE FINAL PLOTTING FUNCTION (WITH CORRECTED PROJECTIONS)
+
 create_final_plot <- function(time_base, price_base, quantity_base, stock_base,
                               time_r_shock, price_r_shock, quantity_r_shock, stock_r_shock,
                               time_R_shock, price_R_shock, quantity_R_shock, stock_R_shock) {
@@ -64,9 +67,6 @@ create_final_plot <- function(time_base, price_base, quantity_base, stock_base,
   segments(Q0_base, P0_base, 0, P0_base, lty = 3, col = "black")
   segments(Q0_r_shock, P0_r_shock, 0, P0_r_shock, lty = 3, col = "red")
   segments(Q0_R_shock, P0_R_shock, 0, P0_R_shock, lty = 3, col = "blue")
-  segments(Q0_base, P0_base, Q0_base, 0, lty = 3, col = "black")
-  segments(Q0_r_shock, P0_r_shock, Q0_r_shock, 0, lty = 3, col = "red")
-  segments(Q0_R_shock, P0_R_shock, Q0_R_shock, 0, lty = 3, col = "blue")
   axis(side = 2, las = 1); mtext("Net Price (Pt)", side = 2, line = 3)
   axis(side = 3); box()
   
@@ -95,6 +95,7 @@ create_final_plot <- function(time_base, price_base, quantity_base, stock_base,
        xaxt = "n", yaxt = "n", xlab = "", ylab = "")
   lines(stock_r_shock, time_r_shock, lwd = 2, lty = 2, col = "red")
   lines(stock_R_shock, time_R_shock, lwd = 2, lty = 2, col = "blue")
+  # NO projection lines in this quadrant, as requested
   axis(side = 1); mtext("Demand (Quantity) / Reserves (R)", side = 1, line = 3)
   axis(side = 2, las = 1); mtext("Time (t)", side = 2, line = 3); box()
   
@@ -109,6 +110,7 @@ create_final_plot <- function(time_base, price_base, quantity_base, stock_base,
   segments(0, T_base, T_base, T_base, lty = 3, col = "black")
   segments(0, T_r_shock, T_r_shock, T_r_shock, lty = 3, col = "red")
   segments(0, T_R_shock, T_R_shock, T_R_shock, lty = 3, col = "blue")
+  segments(T_base, 0, T_base, T_base, lty = 3, col = "black")
   segments(T_r_shock, 0, T_r_shock, T_r_shock, lty = 3, col = "red")
   segments(T_R_shock, 0, T_R_shock, T_R_shock, lty = 3, col = "blue")
   axis(side = 1); mtext("Time (t)", side = 1, line = 3)
@@ -120,7 +122,7 @@ create_final_plot <- function(time_base, price_base, quantity_base, stock_base,
          lwd = 2, bty = "n", cex = 0.8)
 }
 
-# Image time, let's go
+# PART 3: EXECUTION
 create_final_plot(
   time_base, price_base, quantity_base, stock_base,
   time_r_shock, price_r_shock, quantity_r_shock, stock_r_shock,
