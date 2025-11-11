@@ -85,11 +85,11 @@ create_final_plot <- function(time_base, price_base, quantity_base,
        xaxt = "n", yaxt = "n", xlab = "", ylab = "")
   # Add the layered polygons in the correct order
   polygon_x_r_shock <- c(0, quantity_r_shock, 0); polygon_y_r_shock <- c(0, time_r_shock, T_r_shock)
-  polygon(polygon_x_r_shock, polygon_y_r_shock, col = rgb(1, 0, 0, alpha = 0.5), border = NA)
+  polygon(polygon_x_r_shock, polygon_y_r_shock, col = rgb(1, 0, 0, alpha = 0.25), border = NA)
   polygon_x_base <- c(0, quantity_base, 0); polygon_y_base <- c(0, time_base, T_base)
-  polygon(polygon_x_base, polygon_y_base, col = rgb(0.8, 0.8, 0.8, alpha = 0.5), border = NA)
+  polygon(polygon_x_base, polygon_y_base, col = rgb(0.8, 0.8, 0.8, alpha = 0.25), border = NA)
   polygon_x_R_shock <- c(0, quantity_R_shock, 0); polygon_y_R_shock <- c(0, time_R_shock, T_R_shock)
-  polygon(polygon_x_R_shock, polygon_y_R_shock, col = rgb(0, 0, 1, alpha = 0.5), border = NA)
+  polygon(polygon_x_R_shock, polygon_y_R_shock, col = rgb(0, 0, 1, alpha = 0.25), border = NA)
   # Redraw the lines on top
   lines(quantity_base, time_base, lwd = 2, lty = 1, col = "black")
   lines(quantity_r_shock, time_r_shock, lwd = 2, lty = 2, col = "red")
