@@ -4,6 +4,22 @@ r_base <- 0.05; R0_base <- 1000
 r_shock <- 0.10; R0_shock <- 500
 pT <- 3; A <- 120; epsilon <- 0.5
 
+# Step A.2: Define Style & Visualization Settings
+alpha_level <- 0.25 
+
+# Define the colors for each scenario
+color_base <- rgb(0, 0, 0)
+color_r_shock <- rgb(1, 0, 0)
+color_R_shock <- rgb(0, 0, 1)
+color_base_fill <- rgb(t(col2rgb(color_base))/255, alpha = alpha_level)
+color_r_shock_fill <- rgb(t(col2rgb(color_r_shock))/255, alpha = alpha_level)
+color_R_shock_fill <- rgb(t(col2rgb(color_R_shock))/255, alpha = alpha_level)
+
+# Define line types for each scenario
+lty_base <- 1   # Solid
+lty_shock <- 2  # Dashed
+lty_proj <- 3   # Dotted
+
 # Step B: Define Core Economic Functions 
 d_nonlinear <- function(p) A * p^(-epsilon)
 stock_root_finder <- function(Tf, r, R) {
@@ -51,27 +67,27 @@ create_final_plot <- function(time_base, price_base, quantity_base,
   plot(q_demand, p_demand, type = "l", lwd = 2,
        xaxs = "i", yaxs = "i", xlim = rev(range(q_demand)), ylim = c(0, max(p_demand)),
        xaxt = "n", yaxt = "n", xlab = "", ylab = "")
-  segments(Q0_base, P0_base, 0, P0_base, lty = 3, col = "black")
-  segments(Q0_r_shock, P0_r_shock, 0, P0_r_shock, lty = 3, col = "red")
-  segments(Q0_R_shock, P0_R_shock, 0, P0_R_shock, lty = 3, col = "blue")
-  segments(Q0_base, P0_base, Q0_base, 0, lty = 3, col = "black")
-  segments(Q0_r_shock, P0_r_shock, Q0_r_shock, 0, lty = 3, col = "red")
-  segments(Q0_R_shock, P0_R_shock, Q0_R_shock, 0, lty = 3, col = "blue")
+  segments(Q0_base, P0_base, 0, P0_base, lty = lty_proj, col = color_base)
+  segments(Q0_r_shock, P0_r_shock, 0, P0_r_shock, lty = lty_proj, col = color_r_shock)
+  segments(Q0_R_shock, P0_R_shock, 0, P0_R_shock, lty = lty_proj, col = color_R_shock)
+  segments(Q0_base, P0_base, Q0_base, 0, lty = lty_proj, col = color_base)
+  segments(Q0_r_shock, P0_r_shock, Q0_r_shock, 0, lty = lty_proj, col = color_r_shock)
+  segments(Q0_R_shock, P0_R_shock, Q0_R_shock, 0, lty = lty_proj, col = color_R_shock)
   axis(side = 2, las = 1); mtext("Net Price (Pt)", side = 2, line = 3)
   axis(side = 3); box()
   
   # Plot 2: Price Path (Top-Right)
   par(mar = c(0, 0, 5, 5))
-  plot(time_base, price_base, type = "l", lwd = 2, lty = 1, col = "black",
+  plot(time_base, price_base, type = "l", lwd = 2, lty = lty_base, col = color_base,
        xaxs = "i", yaxs = "i",
        xlim = c(0, max(c(time_base, time_r_shock, time_R_shock))),
        ylim = c(0, max(c(price_base, price_r_shock, price_R_shock))),
        xaxt = "n", yaxt = "n", xlab = "", ylab = "")
-  lines(time_r_shock, price_r_shock, lwd = 2, lty = 2, col = "red")
-  lines(time_R_shock, price_R_shock, lwd = 2, lty = 2, col = "blue")
-  segments(T_base, 0, T_base, pT, lty = 3, col = "black")
-  segments(T_r_shock, 0, T_r_shock, pT, lty = 3, col = "red")
-  segments(T_R_shock, 0, T_R_shock, pT, lty = 3, col = "blue")
+  lines(time_r_shock, price_r_shock, lwd = 2, lty = lty_shock, col = color_r_shock)
+  lines(time_R_shock, price_R_shock, lwd = 2, lty = lty_shock, col = color_R_shock)
+  segments(T_base, 0, T_base, pT, lty = lty_proj, col = color_base)
+  segments(T_r_shock, 0, T_r_shock, pT, lty = lty_proj, col = color_r_shock)
+  segments(T_R_shock, 0, T_R_shock, pT, lty = lty_proj, col = color_R_shock)
   axis(side = 3); axis(side = 4, las = 1)
   mtext("Net Price (Pt)", side = 4, line = 3); box()
   
@@ -85,38 +101,38 @@ create_final_plot <- function(time_base, price_base, quantity_base,
        xaxt = "n", yaxt = "n", xlab = "", ylab = "")
   # Add the layered polygons in the correct order
   polygon_x_r_shock <- c(0, quantity_r_shock, 0); polygon_y_r_shock <- c(0, time_r_shock, T_r_shock)
-  polygon(polygon_x_r_shock, polygon_y_r_shock, col = rgb(1, 0, 0, alpha = 0.25), border = NA)
+  polygon(polygon_x_r_shock, polygon_y_r_shock, col = color_r_shock_fill, border = NA)
   polygon_x_base <- c(0, quantity_base, 0); polygon_y_base <- c(0, time_base, T_base)
-  polygon(polygon_x_base, polygon_y_base, col = rgb(0.8, 0.8, 0.8, alpha = 0.25), border = NA)
+  polygon(polygon_x_base, polygon_y_base, col = color_base_fill, border = NA)
   polygon_x_R_shock <- c(0, quantity_R_shock, 0); polygon_y_R_shock <- c(0, time_R_shock, T_R_shock)
-  polygon(polygon_x_R_shock, polygon_y_R_shock, col = rgb(0, 0, 1, alpha = 0.25), border = NA)
+  polygon(polygon_x_R_shock, polygon_y_R_shock, col = color_R_shock_fill, border = NA)
   # Redraw the lines on top
-  lines(quantity_base, time_base, lwd = 2, lty = 1, col = "black")
-  lines(quantity_r_shock, time_r_shock, lwd = 2, lty = 2, col = "red")
-  lines(quantity_R_shock, time_R_shock, lwd = 2, lty = 2, col = "blue")
+  lines(quantity_base, time_base, lwd = 2, lty = lty_base, col = color_base)
+  lines(quantity_r_shock, time_r_shock, lwd = 2, lty = lty_shock, col = color_r_shock)
+  lines(quantity_R_shock, time_R_shock, lwd = 2, lty = lty_shock, col = color_R_shock)
   # Add axes and labels
   axis(side = 1); mtext("Quantity (q)", side = 1, line = 3)
   axis(side = 2, las = 1); mtext("Time (t)", side = 2, line = 3); box()
   
   # Plot 4: 45-degree Line (Bottom-Right)
   par(mar = c(5, 0, 0, 5))
-  plot(time_base, time_base, type = "l", lwd = 2, lty = 1, col = "black",
+  plot(time_base, time_base, type = "l", lwd = 2, lty = lty_base, col = color_base,
        xaxs = "i", yaxs = "i",
        xlim = c(0, max(c(time_base, time_r_shock, time_R_shock))),
        ylim = rev(range(c(time_base, time_r_shock, time_R_shock))),
        xaxt = "n", yaxt = "n", xlab = "", ylab = "")
-  segments(0, T_base, T_base, T_base, lty = 3, col = "black")
-  segments(0, T_r_shock, T_r_shock, T_r_shock, lty = 3, col = "red")
-  segments(0, T_R_shock, T_R_shock, T_R_shock, lty = 3, col = "blue")
-  segments(T_base, 0, T_base, T_base, lty = 3, col = "black")
-  segments(T_r_shock, 0, T_r_shock, T_r_shock, lty = 3, col = "red")
-  segments(T_R_shock, 0, T_R_shock, T_R_shock, lty = 3, col = "blue")
+  segments(0, T_base, T_base, T_base, lty = lty_proj, col = color_base)
+  segments(0, T_r_shock, T_r_shock, T_r_shock, lty = lty_proj, col = color_r_shock)
+  segments(0, T_R_shock, T_R_shock, T_R_shock, lty = lty_proj, col = color_R_shock)
+  segments(T_base, 0, T_base, T_base, lty = lty_proj, col = color_base)
+  segments(T_r_shock, 0, T_r_shock, T_r_shock, lty = lty_proj, col = color_r_shock)
+  segments(T_R_shock, 0, T_R_shock, T_R_shock, lty = lty_proj, col = color_R_shock)
   axis(side = 1); mtext("Time (t)", side = 1, line = 3)
   axis(side = 4, las = 1); mtext("Time (t)", side = 4, line = 3); box()
   legend("topright",
          legend = c("Baseline", "Interest Rate Shock", "Stock Shock"),
-         lty = c(1, 2, 2),
-         col = c("black", "red", "blue"),
+         lty = c(lty_base, lty_shock, lty_shock),
+         col = c(color_base, color_r_shock, color_R_shock),
          lwd = 2, bty = "n", cex = 0.8)
 }
 
