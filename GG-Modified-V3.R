@@ -96,16 +96,21 @@ create_gg_plot <- function(log_linear_demand = FALSE) {
     annotate("text", x = time_base[75], y = price_base[75], label = "p[T]", parse = TRUE, vjust = -0.75) +
     theme_classic() + labs(x = "Time (t)", y = NULL)
   
-  # Quadrant 3: Extraction Path (Bottom-Left)
-  polygon_data <- tibble(x = c(0, plot_data$quantity, 0), y = c(0, plot_data$time, Tf))
-  # Conditional x-limit to match Plot 1
-  xlim_q3 <- if (log_linear_demand) rev(range(quantity_base)) else rev(c(0, q0 * 2))
-  p3 <- ggplot(data = plot_data, aes(x = quantity, y = time)) +
-    geom_polygon(data = polygon_data, aes(x = x, y = y), fill = "gray80") +
-    geom_line(linewidth = 1.1) + scale_x_reverse(limits = xlim_q3) +
-    scale_y_reverse(limits = c(Tf, 0)) +
-    annotate("text", x = mean(plot_data$quantity), y = mean(plot_data$time), label = "R[0]", parse = TRUE, size = 6, hjust = 1) +
-    theme_classic() + labs(x = "Quantity (q)", y = "Time (t)")
+  # Quadrant 3: Extraction Path (Bottom-Left) - CORRECTED VERSION
+  polygon_data <- tibble(
+    time = c(plot_data$time, max(plot_data$time), 0),
+    quantity = c(plot_data$quantity, 0, 0)
+  )
+  
+  p3 <- ggplot(data = plot_data, aes(x = time, y = quantity)) +
+    geom_polygon(data = polygon_data, aes(x = time, y = quantity), fill = "gray80") +
+    geom_line(linewidth = 1.1) +
+    # The scales are no longer reversed
+    scale_y_continuous(limits = c(0, q0 * 1.1)) + 
+    scale_x_continuous(limits = c(0, Tf)) +
+    annotate("text", x = mean(plot_data$time), y = mean(plot_data$quantity), label = "R[0]", parse = TRUE, size = 6) +
+    theme_classic() +
+    labs(x = "Time (t)", y = "Quantity (q)") # Correctly labeled axes
   
   # Quadrant 4: 45-degree Line (Bottom-Right)
   p4 <- ggplot(data = plot_data, aes(x = time, y = time)) +
