@@ -1,12 +1,26 @@
 # Part 1: Load Libraries and Generate Data
+# Installing the necessary libraries
+# install.packages("tidyverse")
+# install.packages("patchwork")
 
-# Load necessary libraries
 library(tidyverse)
 library(patchwork)
 
 # Step A: Define Model Parameters
-r_base <- 0.05; R0_base <- 1000
-pT <- 10; A <- 100; epsilon <- 1.0
+r_base <- 0.05    # Baseline interest rate.
+# Good range for visualization: 0.01 - 0.20
+
+R0_base <- 1000   # Initial resource stock.
+# Good range for visualization: 100 - 10000
+
+pT <- 10          # Choke price (the maximum price).
+# Good range for visualization: 5 - 100
+
+A <- 100          # Demand scaling factor (overall size of demand).
+# Good range for visualization: 50 - 2000
+
+epsilon <- 1.0    # Price elasticity of demand (controls curve shape).
+# Good range for visualization: 0.2 - 2.0
 
 # Step B: Define Core Economic Functions
 d_nonlinear <- function(p) A * p^(-epsilon)
